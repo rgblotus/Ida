@@ -1,0 +1,43 @@
+%%{init: {'theme':'default', 'themeVariables': { 'fontSize': '12px'}}}%%
+
+flowchart TD
+    Start([Start]) --> Auth{User Authenticated?}
+    
+    Auth -->|No| Login[Login/Register]
+    Login -->|Success| Dashboard
+    Auth -->|Yes| Dashboard[Dashboard]
+    
+    Dashboard --> Action{User Action}
+    
+    Action -->|Upload Document| UploadFlow
+    Action -->|Chat Query| ChatFlow
+    Action -->|View Profile| Profile[Profile Management]
+    
+    subgraph UploadFlow["Document Upload Process"]
+        U1[Select File] --> U2[Validate File Type]
+        U2 --> U3[Upload to Server]
+        U3 --> U4[Parse Content]
+        U4 --> U5[Split into Chunks]
+        U5 --> U6[Generate Embeddings]
+        U6 --> U7[Store in Vector DB]
+        U7 --> U8[Update Database]
+        U8 --> U9[Success Notification]
+    end
+    
+    subgraph ChatFlow["RAG Chat Process"]
+        C1[Enter Query] --> C2[Generate Query Embedding]
+        C2 --> C3[Semantic Search]
+        C3 --> C4[Retrieve Relevant Chunks]
+        C4 --> C5[Build Prompt with Context]
+        C5 --> C6[Select AI Model]
+        C6 --> C7[Generate Response]
+        C7 --> C8[Stream Response]
+        C8 --> C9[Display with Sources]
+    end
+    
+    UploadFlow --> Dashboard
+    ChatFlow --> Dashboard
+    Profile --> Dashboard
+    
+    Profile --> Logout[Logout]
+    Logout --> Start

@@ -1,0 +1,52 @@
+%%{init: {'theme':'default', 'themeVariables': { 'fontSize': '12px'}}}%%
+
+flowchart TD
+    ROOT[rag-project/] --> BACKEND[backend/]
+    ROOT --> FRONTEND[frontend/]
+    ROOT --> DOCKER[docker-compose.yml]
+
+    subgraph BACKEND["FastAPI Backend"]
+        B_APP[app/] --> B_API[api/v1/]
+        B_APP --> B_CORE[core/]
+        B_APP --> B_DB[db/]
+        B_APP --> B_MODELS[models/]
+        B_APP --> B_SCHEMAS[schemas/]
+        B_APP --> B_SERVICES[services/]
+        B_APP --> B_UTILS[utils/]
+        B_APP --> B_WORKERS[workers/]
+        
+        B_API --> B_ENDPOINTS[endpoints/<br/>auth.py, chat.py,<br/>documents.py, users.py]
+        B_SERVICES --> B_SVC_AUTH[auth/]
+        B_SERVICES --> B_SVC_DOC[document/]
+        B_SERVICES --> B_SVC_RAG[rag/]
+        B_SERVICES --> B_SVC_USER[user/]
+        
+        B_SVC_RAG --> B_RAG_EMB[embedding_service.py]
+        B_SVC_RAG --> B_RAG_VEC[vector_service.py]
+        B_SVC_RAG --> B_RAG_RET[retrieval_service.py]
+        B_SVC_RAG --> B_RAG_GEN[generation_service.py]
+    end
+
+    subgraph FRONTEND["React Frontend"]
+        F_SRC[src/] --> F_MODULES[modules/]
+        F_SRC --> F_SHARED[shared/]
+        F_SRC --> F_CORE[core/]
+        
+        F_MODULES --> F_AUTH[auth/]
+        F_MODULES --> F_DOCS[documents/]
+        F_MODULES --> F_CHAT[chat/]
+        F_MODULES --> F_USER[user/]
+        
+        F_AUTH --> F_AUTH_COMP[components/<br/>LoginForm, RegisterForm]
+        F_AUTH --> F_AUTH_HOOKS[hooks/<br/>useAuth, useLogin]
+        F_AUTH --> F_AUTH_STORES[stores/<br/>authStore]
+        
+        F_DOCS --> F_DOCS_COMP[components/<br/>DocumentList, DocumentUpload]
+        F_DOCS --> F_DOCS_HOOKS[hooks/<br/>useDocuments, useDocumentUpload]
+        
+        F_CHAT --> F_CHAT_COMP[components/<br/>ChatInterface, MessageBubble]
+        F_CHAT --> F_CHAT_HOOKS[hooks/<br/>useChat, useStreamingResponse]
+        
+        F_SHARED --> F_UI[components/ui/<br/>Button, Input, Card]
+        F_SHARED --> F_LAYOUT[components/layout/<br/>Header, MainLayout]
+    end

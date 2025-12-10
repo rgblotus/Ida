@@ -1,0 +1,65 @@
+%%{init: {'theme':'default', 'themeVariables': { 'fontSize': '12px'}}}%%
+
+flowchart TB
+    %% Styling
+    classDef client fill:#bbdefb,stroke:#0d47a1,stroke-width:3px
+    classDef web fill:#c8e6c9,stroke:#1b5e20,stroke-width:3px
+    classDef api fill:#ffecb3,stroke:#ff6f00,stroke-width:3px
+    classDef service fill:#d1c4e9,stroke:#311b92,stroke-width:3px
+    classDef storage fill:#f8bbd9,stroke:#880e4f,stroke-width:3px
+    classDef external fill:#b2ebf2,stroke:#006064,stroke-width:3px
+
+    subgraph ClientLayer["Client Layer"]
+        C1[Web Browser<br/>React App]:::client
+        C2[Mobile App<br/>Future]:::client
+    end
+
+    subgraph WebLayer["Web Server Layer"]
+        W1[Nginx<br/>Reverse Proxy]:::web
+        W2[Static Files<br/>React Build]:::web
+    end
+
+    subgraph APILayer["API Layer"]
+        A1[FastAPI<br/>REST API]:::api
+        A2[WebSocket<br/>Real-time]:::api
+        A3[Authentication<br/>JWT]:::api
+        A4[Rate Limiting]:::api
+    end
+
+    subgraph ServiceLayer["Service Layer"]
+        S1[Auth Service]:::service
+        S2[Document Service]:::service
+        S3[RAG Service]:::service
+        S4[User Service]:::service
+        S5[Embedding Service]:::service
+        S6[Vector Service]:::service
+    end
+
+    subgraph DataLayer["Data Layer"]
+        D1[(PostgreSQL<br/>Users/Docs)]:::storage
+        D2[(Milvus<br/>Vectors)]:::storage
+        D3[Redis<br/>Cache]:::storage
+        D4[File System<br/>Uploads]:::storage
+    end
+
+    subgraph ExternalLayer["External Services"]
+        E1[Ollama<br/>Local LLM]:::external
+        E2[OpenAI<br/>Cloud API]:::external
+        E3[Embedding Models]:::external
+    end
+
+    %% Connections
+    ClientLayer --> WebLayer
+    WebLayer --> APILayer
+    APILayer --> ServiceLayer
+    ServiceLayer --> DataLayer
+    ServiceLayer --> ExternalLayer
+    
+    %% Internal connections
+    S1 --> S2
+    S1 --> S3
+    S1 --> S4
+    S2 --> S5
+    S3 --> S5
+    S3 --> S6
+    S5 --> S6

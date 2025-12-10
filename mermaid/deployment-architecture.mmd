@@ -1,0 +1,59 @@
+%%{init: {'theme':'default', 'themeVariables': { 'fontSize': '12px'}}}%%
+
+flowchart TB
+    subgraph UserSpace["User Space"]
+        U[User Browser<br/>https://yourapp.com]
+    end
+
+    subgraph CloudProvider["Cloud Provider / Local Server"]
+        subgraph LoadBalancer["Load Balancer"]
+            LB[NGINX<br/>SSL Termination]
+        end
+        
+        subgraph FrontendServices["Frontend Services"]
+            FE1[React App<br/>Container]
+            FE2[React App<br/>Container]
+        end
+        
+        subgraph BackendServices["Backend Services"]
+            API1[FastAPI<br/>Container]
+            API2[FastAPI<br/>Container]
+        end
+        
+        subgraph DatabaseCluster["Database Cluster"]
+            PG1[(PostgreSQL<br/>Primary)]
+            PG2[(PostgreSQL<br/>Replica)]
+        end
+        
+        subgraph VectorDB["Vector Database"]
+            MILVUS[Milvus Cluster<br/>Coordinator + Workers]
+        end
+        
+        subgraph CacheLayer["Cache Layer"]
+            REDIS[Redis Cluster<br/>Session Storage]
+        end
+        
+        subgraph FileStorage["File Storage"]
+            MINIO[MinIO<br/>Object Storage]
+        end
+        
+        subgraph AIServices["AI Services"]
+            OLLAMA[Ollama<br/>Local LLM]
+            OPENAI[OpenAI API<br/>External]
+        end
+    end
+
+    %% Connections
+    U --> LB
+    LB --> FrontendServices
+    FrontendServices --> BackendServices
+    BackendServices --> DatabaseCluster
+    BackendServices --> VectorDB
+    BackendServices --> CacheLayer
+    BackendServices --> FileStorage
+    BackendServices --> AIServices
+    
+    %% Internal connections
+    DatabaseCluster -.->|Replication| DatabaseCluster
+    FrontendServices -.->|Load Balancing| FrontendServices
+    BackendServices -.->|Load Balancing| BackendServices

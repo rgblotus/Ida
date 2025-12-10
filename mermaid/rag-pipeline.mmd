@@ -1,0 +1,48 @@
+%%{init: {'theme':'default', 'themeVariables': { 'fontSize': '14px'}}}%%
+
+flowchart TD
+    %% Styling
+    classDef ingestion fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef processing fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef retrieval fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef generation fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+
+    subgraph Phase1["Phase 1: Document Ingestion"]
+        direction TB
+        P1A[Document Upload\nPDF, DOCX, TXT] --> P1B[File Validation\nType & Size Check]
+        P1B --> P1C[Storage\nSave to File System]
+        P1C --> P1D[Database Record\nCreate Document Entry]
+    end
+
+    subgraph Phase2["Phase 2: Document Processing"]
+        direction TB
+        P2A[Content Extraction\nText & Metadata] --> P2B[Text Chunking\nSemantic Splitting]
+        P2B --> P2C[Embedding Generation\nVector Conversion]
+        P2C --> P2D[Vector Storage\nMilvus Indexing]
+    end
+
+    subgraph Phase3["Phase 3: Query Processing"]
+        direction TB
+        P3A[User Query\nNatural Language] --> P3B[Query Embedding\nVector Conversion]
+        P3B --> P3C[Semantic Search\nSimilarity Matching]
+        P3C --> P3D[Context Retrieval\nTop-K Results]
+    end
+
+    subgraph Phase4["Phase 4: Response Generation"]
+        direction TB
+        P4A[Prompt Engineering\nContext + Query] --> P4B[LLM Selection\nOllama/OpenAI]
+        P4B --> P4C[Response Generation\nAI Completion]
+        P4C --> P4D[Source Attribution\nReference Linking]
+        P4D --> P4E[Streaming Response\nReal-time Output]
+    end
+
+    %% Process Flow
+    Phase1 --> Phase2
+    Phase2 --> Phase3
+    Phase3 --> Phase4
+    
+    %% Styling
+    class P1A,P1B,P1C,P1D ingestion
+    class P2A,P2B,P2C,P2D processing
+    class P3A,P3B,P3C,P3D retrieval
+    class P4A,P4B,P4C,P4D,P4E generation

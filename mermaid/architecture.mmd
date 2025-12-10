@@ -1,0 +1,88 @@
+%%{init: {'theme':'default', 'themeVariables': { 'fontSize': '14px'}}}%%
+
+flowchart TD
+    %% Styling
+    classDef frontend fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef backend fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef ai fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef storage fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+
+    subgraph Frontend["Frontend (React + TypeScript + Tailwind)"]
+        A1[Login/Register] --> A2[Main Layout]
+        A2 --> A3[Documents Module]
+        A2 --> A4[Chat Module]
+        A2 --> A5[User Profile]
+        
+        subgraph A3["Documents Management"]
+            A3A[DocumentUpload] --> A3B[DocumentList]
+            A3B --> A3C[DocumentCard]
+            A3D[DocumentViewer]
+        end
+        
+        subgraph A4["RAG Chat Interface"]
+            A4A[ChatInterface] --> A4B[MessageList]
+            A4A --> A4C[ChatInput]
+            A4A --> A4D[SourcePanel]
+            A4A --> A4E[ModelSelector]
+            A4B --> A4F[MessageBubble]
+        end
+    end
+
+    subgraph Backend["Backend (FastAPI + Python)"]
+        B1[API Gateway] --> B2[Authentication]
+        B1 --> B3[Document Processing]
+        B1 --> B4[RAG Pipeline]
+        B1 --> B5[User Management]
+        
+        subgraph B2["Auth System"]
+            B2A[JWT Token Service] --> B2B[User Repository]
+            B2C[Password Hashing]
+        end
+        
+        subgraph B3["Document Processing"]
+            B3A[File Upload] --> B3B[Document Parser]
+            B3B --> B3C[Text Splitter]
+            B3C --> B3D[Metadata Extractor]
+        end
+        
+        subgraph B4["RAG Pipeline"]
+            B4A[Embedding Service] --> B4B[Vector Store]
+            B4B --> B4C[Retrieval Service]
+            B4C --> B4D[Generation Service]
+        end
+    end
+
+    subgraph Databases["Databases & Storage"]
+        C1[(PostgreSQL\nUser Data\nDocuments)]
+        C2[(Milvus\nVector Store\nEmbeddings)]
+        C3[Local Storage\nUploaded Files]
+        C4[Redis\nSession Cache]
+    end
+
+    subgraph AI_Services["AI Services"]
+        D1[Ollama\nLocal LLM]
+        D2[OpenAI\nCloud API]
+        D3[Embedding Models]
+    end
+
+    %% Connections
+    A1 --> B2
+    A3 --> B3
+    A4 --> B4
+    
+    B2 --> C1
+    B3 --> C1
+    B3 --> C3
+    B4 --> C2
+    B2 --> C4
+    
+    B4A --> D3
+    B4D --> D1
+    B4D --> D2
+
+    %% Styling assignments
+    class A1,A2,A3,A4,A5 frontend
+    class B1,B2,B3,B4,B5 backend
+    class C1,C2,C3,C4 database
+    class D1,D2,D3 ai

@@ -1,0 +1,50 @@
+%%{init: {'theme':'default', 'themeVariables': { 'fontSize': '14px'}}}%%
+
+sequenceDiagram
+    participant U as User
+    participant F as Frontend
+    participant B as Backend API
+    participant DB as PostgreSQL
+    participant VS as Milvus
+    participant AI as AI Service
+
+    %% Authentication Flow
+    U->>F: Login/Register
+    F->>B: POST /auth/login
+    B->>DB: Verify Credentials
+    DB-->>B: User Data
+    B-->>F: JWT Tokens
+    F->>U: Redirect to Dashboard
+
+    %% Document Upload Flow
+    U->>F: Upload Document
+    F->>B: POST /documents/upload (FormData)
+    B->>DB: Create Document Record
+    B->>B: Parse & Chunk Document
+    B->>AI: Generate Embeddings
+    AI-->>B: Document Embeddings
+    B->>VS: Store Vectors
+    VS-->>B: Storage Confirmation
+    B-->>F: Upload Success
+    F-->>U: Document Listed
+
+    %% RAG Chat Flow
+    U->>F: Send Message
+    F->>B: POST /chat/query
+    B->>AI: Generate Query Embedding
+    AI-->>B: Query Vector
+    B->>VS: Semantic Search
+    VS-->>B: Relevant Chunks
+    B->>B: Build Prompt with Context
+    B->>AI: Generate Response
+    AI-->>B: Stream Response
+    B-->>F: Chat Response + Sources
+    F-->>U: Display Message & Sources
+
+    %% Real-time Updates
+    Note over F,B: WebSocket/SSE for Streaming
+    loop Streaming
+        AI->>B: Response Chunk
+        B->>F: Stream Data
+        F->>U: Update Message
+    end

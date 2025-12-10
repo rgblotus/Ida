@@ -1,0 +1,54 @@
+%%{init: {'theme':'default', 'themeVariables': { 'fontSize': '14px'}}}%%
+
+flowchart TD
+    %% Styling
+    classDef frontend fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef backend fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef langchain fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
+    classDef database fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef ai fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+
+    subgraph Frontend["Frontend (React + TypeScript)"]
+        A1[Chat Interface]
+        A2[Document Management]
+        A3[User Authentication]
+    end
+
+    subgraph Backend["Backend (FastAPI)"]
+        B1[API Routes]
+        B2[Authentication]
+        B3[Document Services]
+    end
+
+    subgraph LangChainLayer["LangChain Integration Layer"]
+        LC1[Document Loaders] --> LC2[Text Splitters]
+        LC2 --> LC3[Embeddings]
+        LC3 --> LC4[Vector Stores]
+        LC5[Retrieval Chains] --> LC6[LLM Chains]
+        LC7[Agents] --> LC8[Tools]
+        LC9[Memory] --> LC10[Prompt Templates]
+    end
+
+    subgraph VectorDB["Vector Database"]
+        V1[Milvus<br/>ChromaDB<br/>FAISS]
+    end
+
+    subgraph LLMProviders["LLM Providers"]
+        LLM1[Ollama<br/>Local Models]
+        LLM2[OpenAI<br/>GPT Models]
+        LLM3[Anthropic<br/>Claude]
+        LLM4[HuggingFace<br/>Local Models]
+    end
+
+    %% Connections
+    Frontend --> Backend
+    Backend --> LangChainLayer
+    LangChainLayer --> VectorDB
+    LangChainLayer --> LLMProviders
+
+    %% Styling
+    class A1,A2,A3 frontend
+    class B1,B2,B3 backend
+    class LC1,LC2,LC3,LC4,LC5,LC6,LC7,LC8,LC9,LC10 langchain
+    class V1 database
+    class LLM1,LLM2,LLM3,LLM4 ai
