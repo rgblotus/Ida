@@ -77,8 +77,3 @@ dependencies = [
     "numpy>=2.2.6",
     "numpy>=2.3"
 ]
-
-[tool.uv.workspace]
-members = [
-    "backend",
-]
